@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.siri-to-things.agent</string>
+
+    <!-- Run osascript with your AppleScript file -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/osascript</string>
+        <string>SCRIPT_PATH_PLACEHOLDER</string>
+    </array>
+
+    <!-- Run immediately on load (login or install), then every 15 minutes -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- Run every 15 minutes (900 seconds). Adjust as desired. -->
+    <key>StartInterval</key>
+    <integer>900</integer>
+
+    <!-- Only run while logged in (LaunchAgents, not LaunchDaemons) -->
+    <!-- Log stdout and stderr for debugging -->
+    <key>StandardOutPath</key>
+    <string>/tmp/reminders_to_things.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/reminders_to_things_error.log</string>
+
+    <!-- Don't retry aggressively on failure -->
+    <key>ThrottleInterval</key>
+    <integer>60</integer>
+</dict>
+</plist>
