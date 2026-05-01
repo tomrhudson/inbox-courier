@@ -12,9 +12,11 @@ on run
 		
 		-- Get all incomplete reminders
 		set pendingReminders to (reminders in inboxList whose completed is false)
+		set pendingCount to count of pendingReminders
+		set migratedCount to 0
 		
-		if (count of pendingReminders) is 0 then
-			return -- Nothing to do
+		if pendingCount is 0 then
+			return "pendingBeforeRun=0" & linefeed & "pendingAfterRun=0" & linefeed & "migratedCount=0"
 		end if
 		
 		repeat with theReminder in pendingReminders
@@ -48,6 +50,10 @@ on run
 
 			-- Mark the Reminder as complete so it doesn't get picked up again
 			set completed of theReminder to true
+			set migratedCount to migratedCount + 1
 		end repeat
+
+		set remainingCount to count of (reminders in inboxList whose completed is false)
+		return "pendingBeforeRun=" & pendingCount & linefeed & "pendingAfterRun=" & remainingCount & linefeed & "migratedCount=" & migratedCount
 	end tell
 end run

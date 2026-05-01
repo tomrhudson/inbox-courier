@@ -1,1 +1,11 @@
 .DS_Store
+.build/
+.swiftpm/
+dist/
+
+# Apple signing/notarization secrets and exports
+*.p8
+*.p12
+*.cer
+*.mobileprovision
+*.provisionprofile

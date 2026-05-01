@@ -3,12 +3,13 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.siri-to-things.agent</string>
+    <string>com.tomrhudson.inboxcourier.agent</string>
 
-    <!-- Run osascript with your AppleScript file -->
+    <!-- Run the worker wrapper, which executes AppleScript and writes status/logs -->
     <key>ProgramArguments</key>
     <array>
-        <string>/usr/bin/osascript</string>
+        <string>/bin/bash</string>
+        <string>RUNNER_PATH_PLACEHOLDER</string>
         <string>SCRIPT_PATH_PLACEHOLDER</string>
     </array>
 
@@ -23,10 +24,10 @@
     <!-- Only run while logged in (LaunchAgents, not LaunchDaemons) -->
     <!-- Log stdout and stderr for debugging -->
     <key>StandardOutPath</key>
-    <string>/tmp/reminders_to_things.log</string>
+    <string>STDOUT_PATH_PLACEHOLDER</string>
 
     <key>StandardErrorPath</key>
-    <string>/tmp/reminders_to_things_error.log</string>
+    <string>STDERR_PATH_PLACEHOLDER</string>
 
     <!-- Don't retry aggressively on failure -->
     <key>ThrottleInterval</key>

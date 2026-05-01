@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and Package
+    runs-on: macos-15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate shell scripts
+        run: |
+          bash -n install.sh
+          bash -n uninstall.sh
+          bash -n inbox_courier_run.sh
+          bash -n scripts/package_app.sh
+          bash -n scripts/notarize_app.sh
+
+      - name: Validate launchd plist
+        run: plutil -lint com.tomrhudson.inboxcourier.agent.plist
+
+      - name: Build Swift package
+        run: swift build
+
+      - name: Package app bundle
+        run: VERSION=0.0.0-ci BUILD_NUMBER=${{ github.run_number }} scripts/package_app.sh
+
+      - name: Upload app artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: InboxCourier-ci
+          path: |
+            dist/InboxCourier-0.0.0-ci.zip
+            dist/InboxCourier-0.0.0-ci.zip.sha256
