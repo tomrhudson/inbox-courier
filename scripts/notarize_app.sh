@@ -4,11 +4,12 @@
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-APP_NAME="InboxCourier"
+APP_NAME="Inbox Courier"
+ARCHIVE_BASENAME="InboxCourier"
 VERSION="${VERSION:?VERSION is required}"
 DIST_DIR="$REPO_DIR/dist"
 APP_DIR="$DIST_DIR/$APP_NAME.app"
-ARCHIVE_PATH="$DIST_DIR/$APP_NAME-$VERSION.zip"
+ARCHIVE_PATH="$DIST_DIR/$ARCHIVE_BASENAME-$VERSION.zip"
 KEY_PATH="${APPLE_NOTARY_KEY_PATH:?APPLE_NOTARY_KEY_PATH is required}"
 KEY_ID="${APPLE_NOTARY_KEY_ID:?APPLE_NOTARY_KEY_ID is required}"
 ISSUER_ID="${APPLE_NOTARY_ISSUER_ID:?APPLE_NOTARY_ISSUER_ID is required}"
@@ -38,7 +39,7 @@ spctl --assess --type execute --verbose=4 "$APP_DIR"
 echo "==> Rebuilding release zip with stapled app"
 rm -f "$ARCHIVE_PATH" "$ARCHIVE_PATH.sha256"
 xattr -cr "$APP_DIR"
-ditto -c -k --keepParent "$APP_DIR" "$ARCHIVE_PATH"
+ditto -c -k --keepParent --noextattr --noqtn "$APP_DIR" "$ARCHIVE_PATH"
 shasum -a 256 "$ARCHIVE_PATH" > "$ARCHIVE_PATH.sha256"
 
 echo "Notarized:"

@@ -11,6 +11,7 @@ final class StatusStore: ObservableObject {
     )
     @Published private(set) var launchAtLoginEnabled = false
     @Published private(set) var launchAtLoginStatus = "Unknown"
+    @Published private(set) var agentInstalled = false
     @Published var lastCommandMessage: String?
 
     private let statusURL = URL(
@@ -98,6 +99,7 @@ final class StatusStore: ObservableObject {
             statusFileExists: statusFileExists,
             generatedAt: Date()
         )
+        agentInstalled = AgentController.isInstalled()
         refreshLoginItemStatus()
     }
 
@@ -110,6 +112,12 @@ final class StatusStore: ObservableObject {
     func reloadAgent() {
         let result = AgentController.reload()
         lastCommandMessage = message(for: result, success: "Agent reloaded")
+        refresh()
+    }
+
+    func installOrRepairAgent() {
+        let result = AgentController.installOrRepair()
+        lastCommandMessage = message(for: result, success: "Agent installed")
         refresh()
     }
 

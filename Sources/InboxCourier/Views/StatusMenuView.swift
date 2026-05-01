@@ -15,7 +15,7 @@ struct StatusMenuView: View {
             StatusLine(label: "Pending", value: "\(status?.pendingAfterRun ?? status?.pendingBeforeRun ?? 0)")
             StatusLine(label: "Last run", value: DateFormatting.time(status?.lastFinishedAt))
             StatusLine(label: "Migrated", value: "\(status?.migratedCount ?? 0)")
-            StatusLine(label: "Agent", value: store.snapshot.isLoaded ? "Loaded" : "Not loaded")
+            StatusLine(label: "Agent", value: agentStatus)
             StatusLine(label: "Launch at login", value: store.launchAtLoginStatus)
 
             if let error = status?.lastError, !error.isEmpty {
@@ -45,6 +45,9 @@ struct StatusMenuView: View {
             }
             Button("Refresh") {
                 store.refresh()
+            }
+            Button("Install/Repair Agent") {
+                store.installOrRepairAgent()
             }
             Button("Reload Agent") {
                 store.reloadAgent()
@@ -77,6 +80,14 @@ struct StatusMenuView: View {
         }
         .padding(.vertical, 6)
         .frame(width: 280)
+    }
+
+    private var agentStatus: String {
+        if store.snapshot.isLoaded {
+            return "Loaded"
+        }
+
+        return store.agentInstalled ? "Not loaded" : "Not installed"
     }
 }
 

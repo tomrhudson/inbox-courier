@@ -24,6 +24,9 @@ jobs:
           bash -n scripts/package_app.sh
           bash -n scripts/notarize_app.sh
 
+      - name: Validate app icon generation
+        run: swift scripts/generate_app_icon.swift /tmp/AppIcon.icns
+
       - name: Validate launchd plist
         run: plutil -lint com.tomrhudson.inboxcourier.agent.plist
 

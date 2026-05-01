@@ -110,15 +110,16 @@ It shows:
 - Last run time and migrated count
 - Agent health: healthy, running, stale, failed, or unknown
 - Launch at Login status and toggle
+- Install/Repair Agent for first-run setup or damaged launchd files
 - Quick actions for Run Now, Reload Agent, Reminders, Things, logs, and status
 
 The companion is intentionally menu-bar-only and does not show a Dock icon.
 
 ### Install the released app
 
-For normal use, download the latest `InboxCourier-<version>.zip` from GitHub Releases, unzip it, and move `InboxCourier.app` to `/Applications`.
+For normal use, download the latest `InboxCourier-<version>.zip` from GitHub Releases, unzip it, and move `Inbox Courier.app` to `/Applications`.
 
-Open the app once, then use the menu bar item to enable **Launch at Login**. macOS may show it in **System Settings → General → Login Items & Extensions**.
+Open the app once, then use **Install/Repair Agent** from the menu bar item to install the worker script and LaunchAgent. Then enable **Launch at Login** if you want the menu bar companion to start automatically. macOS may show it in **System Settings → General → Login Items & Extensions**.
 
 > Local artifacts are ad-hoc signed by default so the launch-at-login API has a signed app bundle to register. GitHub Releases are designed to use Developer ID signing and Apple notarization once the required repository secrets are configured.
 
@@ -131,7 +132,7 @@ VERSION=0.1.0 BUILD_NUMBER=1 scripts/package_app.sh
 This creates:
 
 ```bash
-dist/InboxCourier.app
+dist/Inbox Courier.app
 dist/InboxCourier-0.1.0.zip
 dist/InboxCourier-0.1.0.zip.sha256
 ```

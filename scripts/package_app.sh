@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Builds a distributable InboxCourier.app bundle from the SwiftPM executable.
+# Builds a distributable Inbox Courier.app bundle from the SwiftPM executable.
 
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-APP_NAME="InboxCourier"
+APP_NAME="Inbox Courier"
+ARCHIVE_BASENAME="InboxCourier"
 PRODUCT_NAME="InboxCourier"
 BUNDLE_ID="${BUNDLE_ID:-com.tomrhudson.inboxcourier}"
 VERSION="${VERSION:-0.0.0-dev}"
@@ -38,11 +39,16 @@ echo "==> Creating app bundle"
 rm -rf "$APP_DIR"
 mkdir -p "$MACOS_DIR" "$RESOURCES_DIR"
 cp "$EXECUTABLE_PATH" "$MACOS_DIR/$PRODUCT_NAME"
+cp "$REPO_DIR/reminders_to_things.applescript" "$RESOURCES_DIR/reminders_to_things.applescript"
+cp "$REPO_DIR/inbox_courier_run.sh" "$RESOURCES_DIR/inbox_courier_run.sh"
+cp "$REPO_DIR/com.tomrhudson.inboxcourier.agent.plist" "$RESOURCES_DIR/com.tomrhudson.inboxcourier.agent.plist"
+swift "$REPO_DIR/scripts/generate_app_icon.swift" "$RESOURCES_DIR/AppIcon.icns"
 
 /usr/libexec/PlistBuddy -c "Clear dict" "$CONTENTS_DIR/Info.plist" >/dev/null 2>&1 || true
 /usr/libexec/PlistBuddy -c "Add :CFBundleDevelopmentRegion string en" "$CONTENTS_DIR/Info.plist"
 /usr/libexec/PlistBuddy -c "Add :CFBundleExecutable string $PRODUCT_NAME" "$CONTENTS_DIR/Info.plist"
 /usr/libexec/PlistBuddy -c "Add :CFBundleIdentifier string $BUNDLE_ID" "$CONTENTS_DIR/Info.plist"
+/usr/libexec/PlistBuddy -c "Add :CFBundleIconFile string AppIcon" "$CONTENTS_DIR/Info.plist"
 /usr/libexec/PlistBuddy -c "Add :CFBundleInfoDictionaryVersion string 6.0" "$CONTENTS_DIR/Info.plist"
 /usr/libexec/PlistBuddy -c "Add :CFBundleName string Inbox Courier" "$CONTENTS_DIR/Info.plist"
 /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string Inbox Courier" "$CONTENTS_DIR/Info.plist"
@@ -67,13 +73,12 @@ fi
 echo "==> Verifying signature"
 codesign --verify --deep --strict --verbose=2 "$APP_DIR"
 
-ARCHIVE_NAME="$APP_NAME-$VERSION.zip"
+ARCHIVE_NAME="$ARCHIVE_BASENAME-$VERSION.zip"
 ARCHIVE_PATH="$DIST_DIR/$ARCHIVE_NAME"
 
 echo "==> Creating $ARCHIVE_NAME"
 xattr -cr "$APP_DIR"
-codesign --verify --deep --strict --verbose=2 "$APP_DIR"
-ditto -c -k --keepParent "$APP_DIR" "$ARCHIVE_PATH"
+ditto -c -k --keepParent --noextattr --noqtn "$APP_DIR" "$ARCHIVE_PATH"
 shasum -a 256 "$ARCHIVE_PATH" > "$ARCHIVE_PATH.sha256"
 
 echo "Packaged:"
