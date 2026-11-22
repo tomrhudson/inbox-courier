@@ -1,5 +1,35 @@
 # Inbox Courier
 
+> [!IMPORTANT]
+> **Archived — November 22, 2026.** This project is no longer maintained and the repository is read-only.
+>
+> Things 3 now does this natively. In **Things → Settings → Reminders**, check **Show to-dos from `INBOX` in Inbox**. Reminders from that list (including ones added with Siri) appear in your Things Inbox, where you can import them; imported to-dos are deleted from Reminders.
+>
+> Things' built-in import has a few differences from Inbox Courier:
+> - Reminders with attachments, sub-tasks, or location-based alerts are hidden from the Things Inbox and can't be imported.
+> - Imported reminders are **deleted** from Reminders (Inbox Courier marked them complete instead).
+> - Items aren't tagged `siri` automatically.
+
+## Migrating off Inbox Courier
+
+1. Turn on the built-in integration in **Things → Settings → Reminders** (pick the list Siri uses, usually `INBOX`).
+2. Remove the background agent and scripts:
+
+   ```bash
+   ./uninstall.sh
+   ```
+
+3. If you installed the menu bar app, turn off **Launch at Login** in its menu, quit it, and delete `Inbox Courier.app` from `/Applications`.
+4. Optionally delete leftover status and logs:
+
+   ```bash
+   rm -rf ~/Library/Application\ Support/InboxCourier ~/Library/Logs/InboxCourier
+   ```
+
+The rest of this README is kept for reference and describes the project as it was last released (May 2026).
+
+---
+
 Automatically migrates items from the **Reminders Inbox** (where Siri drops them) to the **Things 3 Inbox** on macOS — preserving due dates and times — then marks each Reminder as complete.
 
 ---
